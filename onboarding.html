@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beetle Creator Studio</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+</head>
+<body class="onboarding-body">
+
+  <!-- Screen 1: Title -->
+  <div id="onboarding-title" class="onboarding-screen active">
+    <div class="title-content">
+      <img id="onboarding-title-img" src="" alt="Beetle Creator Studio" class="title-img" />
+      <p class="title-cta">click anywhere to start</p>
+    </div>
+  </div>
+
+  <!-- Screen 2: Quote -->
+  <div id="onboarding-quote" class="onboarding-screen">
+    <div class="quote-content">
+      <p class="quote-text">
+        "If one could conclude as to the nature of the Creator from a study of creation it would appear that God has <br><strong>an inordinate fondness for stars and beetles.</strong>"
+      </p>
+      <p class="quote-attribution">― J.B.S. Haldane</p>
+    </div>
+  </div>
+
+  <!-- Screen 3: Info -->
+  <div id="onboarding-info" class="onboarding-screen">
+    <div class="info-wrapper">
+      <div class="info-frame">
+        <div class="info-frame-content">
+
+          <!-- Letter header -->
+          <div class="letter-header">
+            <div class="letter-header-left">
+              <img id="onboarding-creator-logo" src="" alt="" class="letter-logo" />
+              <div class="letter-header-left-text">
+                <span class="letter-from-label">From the Office of the</span>
+                <span class="letter-from-name">Creator of the Universe*</span>
+              </div>
+            </div>
+            <div class="letter-header-right">
+              <span>June 2,</span>
+              <span>Carboniferous period</span>
+            </div>
+          </div>
+
+          <div class="letter-divider"></div>
+
+          <!-- Welcome section -->
+          <div class="letter-section">
+            <p class="letter-heading">Welcome new intern!</p>
+            <p class="letter-body">
+              We're so excited that you'll be helping on our <strong>planet Earth beetle team</strong>. There's lots of work to be done, management just can't get enough of beetles lately.
+            </p>
+            <p class="letter-body">2026 Beetle Projections:</p>
+            <ul class="letter-list">
+              <li><strong>1-2 million</strong> species of beetles exist</li>
+              <li>Humans will have <strong>discovered about 400,000</strong> species of beetles</li>
+              <li>Beetles will make up about <strong>1 in 4 species on Earth</strong>.</li>
+            </ul>
+          </div>
+
+          <!-- Chart -->
+          <div class="letter-chart-wrapper" id="onboarding-chart">
+            <p class="chart-title">Species on Earth (%)</p>
+          </div>
+
+          <!-- FAQs -->
+          <p class="letter-faq-title">FAQs</p>
+          <div class="letter-divider"></div>
+
+          <div class="letter-faq">
+            <p class="letter-faq-question">What makes a beetle a beetle?</p>
+            <p class="letter-body">By definition, a beetle is an insect that has four wings. The outer pair of wings has hardened into a stiff shell, called the elytra. This protects the inner flight pair, which are folded underneath. So, it's fitting that the scientific name for beetle is 'Coleoptera' – coleo from the Greek for sheath, and ptera meaning wing.</p>
+            <p class="letter-body">Beetles have 4 stages of life: egg, larva, pupa, and adult. After hatching, beetle larva eat and develop until they pupate and emerge as an adult, similarly to butterflies. This life cycle might take days or decades depending on the species and conditions.</p>
+          </div>
+          <div class="letter-img-block">
+            <img id="onboarding-anatomy-img" src="" alt="Beetle anatomy" class="letter-faq-img" />
+            <p class="letter-img-caption"> </p>
+          </div>
+
+          <div class="letter-faq">
+            <p class="letter-faq-question">Why so many beetles?</p>
+            <p class="letter-body">Evolution isn't a perfectly planned flowchart, and there's probably not one reason Earth has so many beetles! Their hardened elytra help protect them, and the ability to fly means they can migrate to new locations when conditions are tough. It also helps that they can eat pretty much anything.</p>
+            <p class="letter-body">One theory is that when flowering plants (angiosperms) evolved, beetles were one of the first species to eat them. As flowering plants diversified and expanded, so did beetles. They beat the competition by taking advantage of new niches.</p>
+          </div>
+          <div class="letter-img-block">
+            <img id="onboarding-angiosperm-img" src="" alt="Angiosperm graphic" class="letter-faq-img" />
+            <p class="letter-img-caption">One theory is that beetles diversified so quickly because they could eat flowering plants.</p>
+          </div>
+
+          <div class="letter-faq">
+            <p class="letter-faq-question">What's a niche?</p>
+            <p class="letter-body">The niche of an animal is where they fit into the ecosystem, including how they get their food, where they find shelter, who they mate with, etc. The niche that an animal establishes is based on their adaptations, or traits for survival.</p>
+            <p class="letter-body">Species usually go extinct because they lose their niche to competitors or a changing environment. Lots of niches are available, but beetles seem particularly suited to filling many of them.</p>
+          </div>
+          <div class="letter-img-block">
+            <img id="onboarding-niches-img" src="" alt="Niches diagram" class="letter-faq-img" />
+            <p class="letter-img-caption">A beetle's niche includes what it eats, where it lives, and how it names. Where a niche overlaps, competition between species occurs.</p>
+          </div>
+
+          <p class="letter-body">Next, you'll be able to explore different beetle adaptations and create your own new species. We appreciate your contributions to this important evolutionary project.</p>
+
+          <p class="letter-footnote">*Creator of the universe, metaphorically speaking.</p>
+        </div>
+      </div>
+
+      <button id="onboarding-create-btn" class="create-beetle-btn">Create a new beetle species</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/onboarding.js"></script>
+</body>
+</html>
