@@ -3,9 +3,10 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/canvas-final-beetles/', // GitHub Pages repo name
+  base: '/beetle-creator-studio/', // GitHub Pages repo name
   build: {
-    outDir: 'dist',
+    // Build into docs/ so GitHub Pages can serve from main branch /docs
+    outDir: 'docs',
     assetsDir: 'assets',
     rollupOptions: {
       input: {

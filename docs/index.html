@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beetle Creator Studio</title>
+  <script type="module" crossorigin src="/beetle-creator-studio/assets/main-Ci1pYDRM.js"></script>
+  <link rel="modulepreload" crossorigin href="/beetle-creator-studio/assets/style-kUWxITkH.js">
+  <link rel="stylesheet" crossorigin href="/beetle-creator-studio/assets/style-B41tGuow.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Main content area: buttons | dialog | canvas -->
+    <div id="main-row">
+      <!-- Left buttons column -->
+      <div id="buttons-column">
+
+        <button class="badge-btn" data-panel="head-shape" aria-label="Head Shape">
+          <img id="head-shape-badge-img" src="" alt="Head Shape" />
+        </button>
+
+        
+        <div class="column-divider"></div>
+        <button class="badge-btn" data-panel="body" aria-label="Body">
+          <img id="body-badge-img" src="" alt="Body Shape" />
+        </button>
+      
+        <div class="column-divider"></div>
+        <button class="badge-btn" data-panel="pattern" aria-label="Pattern">
+          <img id="pattern-badge-img" src="" alt="Pattern" />
+        </button>
+        <div class="column-divider"></div>
+        <button class="badge-btn" data-panel="color" aria-label="Color">
+          <img id="color-badge-img" src="" alt="Color" />
+        </button>
+        <div class="column-divider"></div>
+        <button class="badge-btn" data-panel="surface" aria-label="Surface">
+          <img id="surface-badge-img" src="" alt="Surface" />
+        </button>
+        <div class="column-divider"></div>
+      </div>
+
+      <!-- Customizer dialog (shown/hidden dynamically) -->
+      <div id="customizer-dialog">
+        <!-- Body panel -->
+        <div class="panel" id="body-panel">
+          <div class="panel-header">
+            <h3>Body shape</h3>
+            <button class="close-btn" aria-label="Close">
+              <img src="/beetle-creator-studio/icons/Close-icon.svg" alt="Close" />
+            </button>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-content">
+            <div class="carousel-card">
+              <div class="carousel-item-content">
+                <div class="carousel-image-placeholder">
+                  <img id="body-preview-image" src="" alt="Body preview" />
+                </div>
+                <div class="carousel-title-container">
+                  <h4 class="carousel-title">Long legs</h4>
+                  <div class="carousel-niche-chip niche-chip--body">Speedy runner</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-connector">
+              <img src="/beetle-creator-studio/images/divider.svg" alt="" />
+            </div>
+            <div class="real-example-box" id="body-example-box">
+              <img src="/beetle-creator-studio/images/Real-example-header.png" alt="" class="real-example-header-img" />
+              <div class="real-example-content">
+                <div class="real-example-text">
+                  <p class="real-example-header-label">Real beetle example</p>
+                  <p class="real-example-name" id="body-example-name">Darkling Beetle</p>
+                  <div class="real-example-divider"></div>
+                  <p class="real-example-description" id="body-example-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="real-example-image-container">
+                  <img class="real-example-image" id="body-example-image" src="" alt="Real example" />
+                  <div class="real-example-scientific-name" id="body-example-scientific-name">Eleodes obscura</div>
+                </div>
+                <img src="/beetle-creator-studio/images/ARROW.png" alt="" class="real-example-arrow" />
+              </div>
+            </div>
+          </div>
+          <div class="carousel-footer">
+            <img src="/beetle-creator-studio/images/panel-footer.png" class="carousel-footer-shape" alt="" />
+            <div class="carousel-footer-bar">
+              <button class="carousel-prev" aria-label="Previous">
+                <img src="/beetle-creator-studio/icons/arrow_back_ios.svg" alt="Previous" />
+              </button>
+              <div class="carousel-indicators"></div>
+              <button class="carousel-next" aria-label="Next">
+                <img src="/beetle-creator-studio/icons/arrow_forward_ios.svg" alt="Next" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Head shape panel -->
+        <div class="panel" id="head-shape-panel">
+          <div class="panel-header">
+            <h3>Head shape</h3>
+            <button class="close-btn" aria-label="Close">
+              <img src="/beetle-creator-studio/icons/Close-icon.svg" alt="Close" />
+            </button>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-content">
+            <div class="carousel-card">
+              <div class="carousel-item-content">
+                <div class="carousel-image-placeholder">
+                  <img id="head-preview-image" src="" alt="Head preview" />
+                </div>
+                <div class="carousel-title-container">
+                  <h4 class="carousel-title">Enlarged mandibles</h4>
+                  <div class="carousel-niche-chip niche-chip--head">Fights for mates</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-connector">
+              <img src="/beetle-creator-studio/images/divider.svg" alt="" />
+            </div>
+            <div class="real-example-box" id="head-example-box">
+              <img src="/beetle-creator-studio/images/Real-example-header.png" alt="" class="real-example-header-img" />
+              <div class="real-example-content">
+                <div class="real-example-text">
+                  <p class="real-example-header-label">Real beetle example</p>
+                  <p class="real-example-name" id="head-example-name">Stag Beetle</p>
+                  <div class="real-example-divider"></div>
+                  <p class="real-example-description" id="head-example-description">The jaws of male stag beetles are enlarged pincers that are used for fighting over females.</p>
+                </div>
+                <div class="real-example-image-container">
+                  <img class="real-example-image" id="head-example-image" src="" alt="Real example" />
+                  <div class="real-example-scientific-name" id="head-example-scientific-name">Lucanus cervus</div>
+                </div>
+                <img src="/beetle-creator-studio/images/ARROW.png" alt="" class="real-example-arrow" />
+              </div>
+            </div>
+          </div>
+          <div class="carousel-footer">
+            <img src="/beetle-creator-studio/images/panel-footer.png" class="carousel-footer-shape" alt="" />
+            <div class="carousel-footer-bar">
+              <button class="carousel-prev" aria-label="Previous">
+                <img src="/beetle-creator-studio/icons/arrow_back_ios.svg" alt="Previous" />
+              </button>
+              <div class="carousel-indicators"></div>
+              <button class="carousel-next" aria-label="Next">
+                <img src="/beetle-creator-studio/icons/arrow_forward_ios.svg" alt="Next" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Texture panel -->
+        <div class="panel" id="pattern-panel">
+          <div class="panel-header">
+            <h3>Pattern</h3>
+            <button class="close-btn" aria-label="Close">
+              <img src="/beetle-creator-studio/icons/Close-icon.svg" alt="Close" />
+            </button>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-content">
+            <div class="carousel-card">
+              <div class="carousel-item-content">
+                <div class="carousel-image-placeholder">
+                  <img id="pattern-preview-image" src="" alt="Texture preview" />
+                </div>
+                <div class="carousel-title-container">
+                  <h4 class="carousel-title">Stripes</h4>
+                  <div class="carousel-niche-chip niche-chip--pattern">Confusing to predators</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-connector">
+              <img src="/beetle-creator-studio/images/divider.svg" alt="" />
+            </div>
+            <div class="real-example-box" id="pattern-example-box">
+              <img src="/beetle-creator-studio/images/Real-example-header.png" alt="" class="real-example-header-img" />
+              <div class="real-example-content">
+                <div class="real-example-text">
+                  <p class="real-example-header-label">Real beetle example</p>
+                  <p class="real-example-name" id="pattern-example-name">Striped Beetle</p>
+                  <div class="real-example-divider"></div>
+                  <p class="real-example-description" id="pattern-example-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="real-example-image-container">
+                  <img class="real-example-image" id="pattern-example-image" src="" alt="Real example" />
+                  <div class="real-example-scientific-name" id="pattern-example-scientific-name">Chrysomela scripta</div>
+                </div>
+                <img src="/beetle-creator-studio/images/ARROW.png" alt="" class="real-example-arrow" />
+              </div>
+            </div>
+          </div>
+          <div class="carousel-footer">
+            <img src="/beetle-creator-studio/images/panel-footer.png" class="carousel-footer-shape" alt="" />
+            <div class="carousel-footer-bar">
+              <button class="carousel-prev" aria-label="Previous">
+                <img src="/beetle-creator-studio/icons/arrow_back_ios.svg" alt="Previous" />
+              </button>
+              <div class="carousel-indicators"></div>
+              <button class="carousel-next" aria-label="Next">
+                <img src="/beetle-creator-studio/icons/arrow_forward_ios.svg" alt="Next" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Color panel -->
+        <div class="panel" id="color-panel">
+          <div class="panel-header">
+            <h3>Color</h3>
+            <button class="close-btn" aria-label="Close">
+              <img src="/beetle-creator-studio/icons/Close-icon.svg" alt="Close" />
+            </button>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-content">
+            <div class="feature-box">
+              <div class="color-pickers-row">
+                <div class="color-picker-group">
+                  <p class="color-picker-label">Primary</p>
+                  <div class="color-swatch" id="primary-swatch" data-target="primary"></div>
+                </div>
+                <div class="color-picker-group" id="secondary-color-group">
+                  <p class="color-picker-label">Secondary</p>
+                  <div class="color-swatch" id="secondary-swatch" data-target="secondary"></div>
+                </div>
+              </div>
+              <div class="feature-divider"></div>
+              <div class="carousel-niche-chip niche-chip--color" id="color-niche-chip">Warning coloration or mimicry</div>
+            </div>
+            <div class="color-picker-popup" id="color-picker-popup">
+              <div class="color-picker-section">
+                <p class="color-picker-section-label">Bright</p>
+                <div class="color-preset-row" id="bright-colors-row"></div>
+              </div>
+              <div class="color-picker-section">
+                <p class="color-picker-section-label">Dark / Dull</p>
+                <div class="color-preset-row" id="dull-colors-row"></div>
+              </div>
+            </div>
+            <div class="panel-connector">
+              <img src="/beetle-creator-studio/images/divider.svg" alt="" />
+            </div>
+            <div class="real-example-box" id="color-example-box">
+              <img src="/beetle-creator-studio/images/Real-example-header.png" alt="" class="real-example-header-img" />
+              <div class="real-example-content">
+                <div class="real-example-text">
+                  <p class="real-example-header-label">Real beetle example</p>
+                  <p class="real-example-name" id="color-example-name">Ladybug</p>
+                  <div class="real-example-divider"></div>
+                  <p class="real-example-description" id="color-example-description">Bright red and orange coloration warns predators that ladybugs taste bad. Some harmless beetles mimic these warning patterns.</p>
+                </div>
+                <div class="real-example-image-container">
+                  <img class="real-example-image" id="color-example-image" src="" alt="Real example" />
+                  <div class="real-example-scientific-name" id="color-example-scientific-name">Coccinella septempunctata</div>
+                </div>
+                <img src="/beetle-creator-studio/images/ARROW.png" alt="" class="real-example-arrow" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Surface panel -->
+        <div class="panel" id="surface-panel">
+          <div class="panel-header">
+            <h3>Surface</h3>
+            <button class="close-btn" aria-label="Close">
+              <img src="/beetle-creator-studio/icons/Close-icon.svg" alt="Close" />
+            </button>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-content">
+            <div class="feature-box">
+              <div class="surface-toggles">
+                <div class="toggle-row">
+                  <span class="toggle-label-text">Iridescence</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="iridescenceToggle" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-row">
+                  <span class="toggle-label-text">Gloss</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="glossToggle" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="feature-divider"></div>
+              <div class="surface-niche-row">
+                <div class="carousel-niche-chip niche-chip--surface">Still being researched</div>
+                <span class="surface-niche-text">Scientists aren't sure!</span>
+              </div>
+            </div>
+            <div class="panel-connector">
+              <img src="/beetle-creator-studio/images/divider.svg" alt="" />
+            </div>
+            <div class="real-example-box" id="surface-example-box">
+              <img src="/beetle-creator-studio/images/Real-example-header.png" alt="" class="real-example-header-img" />
+              <div class="real-example-content">
+                <div class="real-example-text">
+                  <p class="real-example-header-label">Real beetle example</p>
+                  <p class="real-example-name" id="surface-example-name">Jewel Beetle</p>
+                  <div class="real-example-divider"></div>
+                  <p class="real-example-description" id="surface-example-description">Jewel beetles have a brilliant metallic iridescent sheen created by microscopic structures in their exoskeleton.</p>
+                </div>
+                <div class="real-example-image-container">
+                  <img class="real-example-image" id="surface-example-image" src="" alt="Real example" />
+                  <div class="real-example-scientific-name" id="surface-example-scientific-name">Chrysochroa fulgidissima</div>
+                </div>
+                <img src="/beetle-creator-studio/images/ARROW.png" alt="" class="real-example-arrow" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Three.js canvas container -->
+      <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Bottom row: niche characteristics -->
+    <div id="bottom-row">
+      <div class="bottom-row-label">Adaptations:</div>
+      <div id="niche-chips-container">
+        <!-- Chips will be dynamically populated -->
+      </div>
+      <button id="release-beetle-btn" type="button">Release beetle</button>
+    </div>
+  </div>
+
+</body>
+</html>
