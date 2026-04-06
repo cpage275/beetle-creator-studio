@@ -78,6 +78,11 @@ import iridMatteRealExImg from './assets/irid-matte-real-example.png?url';
 import noIridGlossRealExImg from './assets/no-irid-gloss-real-example.png?url';
 import noIridMatteRealExImg from './assets/no-irid-matte-real-example.png?url';
 
+// Redirect to onboarding if arriving directly (not via the app flow)
+if (!sessionStorage.getItem('editorReady')) {
+  window.location.replace(import.meta.env.BASE_URL + 'onboarding.html');
+}
+
 const canvas = document.querySelector('#canvas');
 const canvasContainer = document.querySelector('#canvas-container');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });

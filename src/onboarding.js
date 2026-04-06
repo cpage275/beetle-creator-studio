@@ -211,8 +211,9 @@ function initOnboarding() {
     }, 800);
   });
 
-  // Screen 3 → Beetle creator: navigate to creator page
+  // Screen 3 → Beetle creator: set flow flag then navigate
   createBtn.addEventListener('click', () => {
+    sessionStorage.setItem('editorReady', '1');
     document.body.classList.add('page-exit');
     setTimeout(() => {
       window.location.href = './index.html';
