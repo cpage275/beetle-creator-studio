@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Beetle Creator Studio</title>
-  <script type="module" crossorigin src="/beetle-creator-studio/assets/main-Ci1pYDRM.js"></script>
-  <link rel="modulepreload" crossorigin href="/beetle-creator-studio/assets/style-kUWxITkH.js">
-  <link rel="stylesheet" crossorigin href="/beetle-creator-studio/assets/style-B41tGuow.css">
+  <script type="module" crossorigin src="/beetle-creator-studio/assets/main-DjUWzTIW.js"></script>
+  <link rel="modulepreload" crossorigin href="/beetle-creator-studio/assets/style-DeMQUgEr.js">
+  <link rel="modulepreload" crossorigin href="/beetle-creator-studio/assets/supabaseClient-DaFxximQ.js">
+  <link rel="stylesheet" crossorigin href="/beetle-creator-studio/assets/style-Fpg-hZzJ.css">
 </head>
 <body>
   <div id="app">
@@ -334,5 +335,34 @@
     </div>
   </div>
 
+  <!-- Rotate hint icon (top-right) -->
+  <div id="rotate-hint">
+    <img src="./icons/3d_rotation.svg" alt="3D rotation hint" />
+  </div>
+
+  <!-- Release confirmation modal -->
+  <div id="release-confirm-backdrop" aria-hidden="true">
+    <div class="release-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="release-confirm-title">
+      <div class="release-confirm-content">
+        <h3 id="release-confirm-title">Are you sure?</h3>
+        <p class="release-confirm-subtitle">Once you release your beetle, it will leave for Earth and you can’t edit it. You can always make another one though!</p>
+        <div class="release-confirm-actions">
+          <button type="button" id="release-cancel-btn" class="btn-cancel">Cancel</button>
+          <button type="button" id="release-confirm-btn" class="btn-release">Yes, release</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader overlay (visible on page load, hidden once 3D models are ready) -->
+  <div id="loader-overlay" class="loader-overlay">
+    <video autoplay loop muted playsinline>
+      <source src="./icons/loader.webm" type="video/webm" />
+    </video>
+    <p id="loader-text" class="loader-label">Loading beetle editor...</p>
+  </div>
+
+  <!-- Optional runtime env for static hosting (GH Pages). Safe to 404 locally. -->
+  <script src="./env.js" crossorigin="anonymous"></script>
 </body>
 </html>

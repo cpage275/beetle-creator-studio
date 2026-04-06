@@ -15,6 +15,7 @@ import colorBadgeUrl from './assets/color-badge-img.png?url';
 import colorBadgeHoverUrl from './assets/color-badge-img-hover.png?url';
 import surfaceBadgeUrl from './assets/surface-badge-img.png?url';
 import surfaceBadgeHoverUrl from './assets/surface-badge-img-hover.png?url';
+import { supabase } from './supabaseClient.js';
 
 // Badge image map for easy lookup
 const badgeImages = {
@@ -87,7 +88,7 @@ scene.background = new THREE.Color(0xfafafa);
 
 // Add grid helper as fixed background
 const gridHelper = new THREE.GridHelper(50, 50, 0x888888, 0xcccccc);
-gridHelper.position.y = -2;
+gridHelper.position.y = -6; // moved down by 5
 scene.add(gridHelper);
 
 // Create simple environment map using CubeCamera for reflections
@@ -105,6 +106,13 @@ camera.position.copy(INITIAL_CAMERA_POSITION);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.target.copy(INITIAL_CAMERA_TARGET);
+// Limit orbit to ±90° azimuth around initial forward, and prevent underside views
+controls.minAzimuthAngle = -Math.PI / 3;       // ~ -60°
+controls.maxAzimuthAngle =  Math.PI / 3;       // ~ +60°
+controls.minPolarAngle = 0.3;                  // limit looking down too far
+controls.maxPolarAngle = Math.PI / 2 + 1;   // prevent underside views
+controls.minDistance = 4;                    // how close you can zoom in
+controls.maxDistance = 9.0;                    // max zoom out
 
 const releaseButtonEl = document.getElementById('release-beetle-btn');
 
@@ -127,6 +135,7 @@ const ladybugModelPath = `${import.meta.env.BASE_URL}models/ladybug-rigged.glb`;
 const rhinoModelPath = `${import.meta.env.BASE_URL}models/rhino-riggged.glb`;
 const scarabModelPath = `${import.meta.env.BASE_URL}models/scarab-rigged.glb`;
 const bombardierModelPath = `${import.meta.env.BASE_URL}models/bombardier-rigged.glb`;
+const treeModelPath = `${import.meta.env.BASE_URL}models/tree1.glb`;
 let currentWalkMixer = null;
 let currentWalkAction = null;
 let releaseSequenceRunning = false;
@@ -142,6 +151,38 @@ const beetleBaseRotationByBody = {
   bombardier: { x: Math.PI / 2, y: 0, z: 0 },
 };
 
+// Load and place background tree behind the beetle (relative to initial camera)
+loader.load(treeModelPath, gltf => {
+  const tree = gltf.scene;
+  tree.traverse(obj => {
+    if (obj.isMesh) {
+      obj.castShadow = false;
+      obj.receiveShadow = false;
+      if (obj.material) {
+        const mat = obj.material.clone ? obj.material.clone() : obj.material;
+        // Ensure texture uses sRGB for correct brightness
+        if ('map' in mat && mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace;
+          mat.map.needsUpdate = true;
+        }
+        if ('color' in mat) mat.color.multiplyScalar(4);
+        if ('metalness' in mat) mat.metalness = 0.0;
+        if ('roughness' in mat) mat.roughness = 0.6;
+        if ('envMapIntensity' in mat) mat.envMapIntensity = 0.9;
+        if ('emissive' in mat) mat.emissive.setHex(0xffffff);
+        if ('emissiveIntensity' in mat) mat.emissiveIntensity = 0.25;
+        mat.needsUpdate = true;
+        obj.material = mat;
+      }
+    }
+  });
+  tree.position.set(3, -7, -3.5); // moved down by 5
+  tree.rotation.set(0,  -Math.PI + 1.1  , 0);
+  tree.scale.set(5.5, 5.5, 5.5);
+  scene.add(tree);
+}, undefined, (err) => {
+  console.warn('Failed to load tree1.glb:', err);
+});
 // Data structures for heads and bodies
 const headData = {
   'Stag': { 
@@ -414,15 +455,15 @@ beetleMaterial = new THREE.MeshPhysicalMaterial({
   clearcoat: 1.0, // Specular strength fixed at 1
   clearcoatRoughness: 0.05,
   iridescence: 1.0,
-  iridescenceIOR: 1.0 + (0.8 * 0.5), // Iridescence shift ON (0.8)
+  iridescenceIOR: 1.0 + (0.8 * 0.5),
   envMap: cubeRenderTarget.texture,
   envMapIntensity: 0.5 + (2.5 / 3) * 0.5, // Iridescence strength fixed at 2.5
 });
 
 // Store custom uniforms for color mixing (will be used in onBeforeCompile)
 const materialUniforms = {
-  baseColor: { value: baseColor },
-  accentColor: { value: accentColor },
+      baseColor: { value: baseColor },
+      accentColor: { value: accentColor },
   maskMap: { value: currentTexture }
 };
 
@@ -438,9 +479,9 @@ beetleMaterial.onBeforeCompile = (shader) => {
   shader.fragmentShader = shader.fragmentShader.replace(
     '#include <common>',
     `#include <common>
-uniform vec3 baseColor;
-uniform vec3 accentColor;
-uniform sampler2D maskMap;
+      uniform vec3 baseColor;
+      uniform vec3 accentColor;
+      uniform sampler2D maskMap;
 varying vec2 vUv;`
   );
   
@@ -468,56 +509,13 @@ vUv = uv;`
   );
 };
 
-// Create black material for head and legs with visible highlights
-headMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      shininess: { value: 60.0 },
-      specularStrength: { value: 0.5 },
-      lightPosition: { value: new THREE.Vector3(5, 10, 5) }
-    },
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vViewPosition;
-      varying vec3 vWorldPosition;
-
-      void main(){
-        vNormal = normalize(normalMatrix * normal);
-        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        vViewPosition = -mvPosition.xyz;
-        vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-        gl_Position = projectionMatrix * mvPosition;
-      }
-    `,
-    fragmentShader: `
-      uniform float shininess;
-      uniform float specularStrength;
-      uniform vec3 lightPosition;
-      varying vec3 vNormal;
-      varying vec3 vViewPosition;
-      varying vec3 vWorldPosition;
-
-      void main(){
-        vec3 baseColor = vec3(0.05); // Very dark gray instead of pure black
-
-        vec3 normal = normalize(vNormal);
-        vec3 viewDir = normalize(vViewPosition);
-        vec3 lightDir = normalize(lightPosition - vWorldPosition);
-
-        // Diffuse lighting
-        float diffuse = max(dot(normal, lightDir), 0.0);
-        vec3 col = baseColor * (0.3 + diffuse * 0.7); // Ambient + diffuse
-
-        // Specular highlights
-        vec3 halfVector = normalize(lightDir + viewDir);
-        float specAngle = max(dot(halfVector, normal), 0.0);
-        float specular = pow(specAngle, shininess);
-        vec3 specularColor = vec3(1.0) * specular * specularStrength;
-        col += specularColor;
-
-        gl_FragColor = vec4(col, 1.0);
-      }
-    `,
-});
+  // Black material for head and legs
+  headMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(0x0d0d0d),
+    metalness: 0.2,
+    roughness: 0.75,
+    envMapIntensity: 0,
+  });
 
 // Function to apply materials to a model
 function applyMaterialsToModel(model, bodyType) {
@@ -603,10 +601,13 @@ bodyOrder.forEach(bodyType => {
     }
     
     modelsLoaded++;
-    
+
     // Apply initial pattern texture when all models are loaded
     if (modelsLoaded === totalModels) {
       applyPattern(patternOrder[currentPatternIndex]);
+      // Hide the loader — editor is ready
+      const loaderOverlay = document.getElementById('loader-overlay');
+      if (loaderOverlay) loaderOverlay.classList.add('hidden');
     }
   });
 });
@@ -754,7 +755,84 @@ async function runReleaseSequence() {
 function initReleaseButton() {
   if (!releaseButtonEl) return;
   releaseButtonEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}images/release-button.svg')`;
-  releaseButtonEl.addEventListener('click', runReleaseSequence);
+  // Hook up confirmation modal instead of immediate release
+  const backdrop = document.getElementById('release-confirm-backdrop');
+  const cancelBtn = document.getElementById('release-cancel-btn');
+  const confirmBtn = document.getElementById('release-confirm-btn');
+
+  async function saveReleasedBeetle() {
+    try {
+      const iridescenceChecked = document.getElementById('iridescenceToggle')?.checked ?? false;
+      const glossChecked = document.getElementById('glossToggle')?.checked ?? false;
+      const payload = {
+        head: currentHead, // e.g., "Stag"
+        body: currentBody, // e.g., "darkling"
+        pattern: patternOrder[currentPatternIndex],
+        primary_color: primaryColorHex,
+        secondary_color: secondaryColorHex ?? null,
+        iridescence: !!iridescenceChecked,
+        gloss: !!glossChecked
+      };
+      const { error } = await supabase.from('beetles').insert(payload);
+      if (error) {
+        console.error('Failed to save beetle:', error);
+      } else {
+        console.debug('Saved released beetle:', payload);
+      }
+    } catch (err) {
+      console.error('Error saving beetle:', err);
+    }
+  }
+
+  function openConfirm() {
+    if (!backdrop) return;
+    backdrop.setAttribute('aria-hidden', 'false');
+    // Trap basic focus to the confirm button for now
+    if (confirmBtn) confirmBtn.focus();
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function closeConfirm() {
+    if (!backdrop) return;
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('keydown', onKeydown);
+    releaseButtonEl.focus();
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeConfirm();
+    }
+  }
+
+  releaseButtonEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    openConfirm();
+  });
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeConfirm();
+    });
+  }
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      closeConfirm();
+      // Persist the current configuration for the environment page
+      await saveReleasedBeetle();
+      await runReleaseSequence();
+    });
+  }
+  if (backdrop) {
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        closeConfirm();
+      }
+    });
+  }
 }
 
 // Panel management
@@ -1105,6 +1183,15 @@ if (document.readyState === 'loading') {
   initColorPanel();
   initSurfacePanel();
   initReleaseButton();
+  // Enable vertical wheel → horizontal scroll on adaptations row
+  const chips = document.getElementById('niche-chips-container');
+  if (chips) {
+    chips.addEventListener('wheel', (e) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      chips.scrollLeft += e.deltaY;
+    }, { passive: false });
+  }
 }
 
 // Pattern application
@@ -1219,10 +1306,10 @@ function initColorPanel() {
         document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
         swatch.classList.add('active');
         updatePresetSelection();
-      }
-    });
+    }
   });
-  
+});
+
   // Preset color click handler — don't close popup, only close on click-outside
   if (popup) {
     popup.addEventListener('click', (e) => {
@@ -1392,6 +1479,16 @@ function animate(now = performance.now()) {
       currentBeetle.visible = false;
       setAnimationStateForBody(currentBody, false);
       releaseAscentActive = false;
+      // Show loader then navigate to environment
+      const loaderOverlay = document.getElementById('loader-overlay');
+      const loaderText = document.getElementById('loader-text');
+      if (loaderOverlay) {
+        if (loaderText) loaderText.textContent = 'Entering simulated beetle environment...';
+        loaderOverlay.classList.remove('hidden');
+      }
+      setTimeout(() => {
+        window.location.href = `${import.meta.env.BASE_URL}environment.html`;
+      }, 1800);
     }
   }
 
