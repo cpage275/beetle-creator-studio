@@ -844,6 +844,75 @@ function initReleaseButton() {
 let activePanel = null;
 const customizerDialog = customizerDialogEl;
 
+const CAROUSEL_HINT_PANEL_IDS = new Set(['head-shape', 'body', 'pattern']);
+/** Pixels to shift the hint upward from the carousel footer bar center */
+const CAROUSEL_HINT_OFFSET_UP = 14;
+/** After any carousel arrow click, hint stays hidden until full page reload */
+let carouselNavHintDismissedThisSession = false;
+
+function positionCarouselNavHint() {
+  const hint = document.getElementById('carousel-nav-hint');
+  const canvas = document.getElementById('canvas-container');
+  if (!hint || !canvas || !hint.classList.contains('carousel-nav-hint--visible')) return;
+  const active = document.querySelector('.panel.active');
+  const footerBar = active?.querySelector('.carousel-footer-bar');
+  if (!footerBar) return;
+  const canvasRect = canvas.getBoundingClientRect();
+  const barRect = footerBar.getBoundingClientRect();
+  const top =
+    barRect.top +
+    barRect.height / 2 -
+    canvasRect.top -
+    hint.offsetHeight / 2 -
+    CAROUSEL_HINT_OFFSET_UP;
+  hint.style.top = `${Math.round(top)}px`;
+}
+
+function positionCarouselNavHintOnResize() {
+  positionCarouselNavHint();
+}
+
+function hideCarouselNavHintWithoutDismissing() {
+  const hint = document.getElementById('carousel-nav-hint');
+  if (!hint || !hint.classList.contains('carousel-nav-hint--visible')) return;
+  hint.hidden = true;
+  hint.setAttribute('aria-hidden', 'true');
+  hint.classList.remove('carousel-nav-hint--visible');
+  window.removeEventListener('resize', positionCarouselNavHintOnResize);
+}
+
+function maybeShowCarouselNavHint(panelId) {
+  const hint = document.getElementById('carousel-nav-hint');
+  if (!hint) return;
+
+  if (!CAROUSEL_HINT_PANEL_IDS.has(panelId)) {
+    hideCarouselNavHintWithoutDismissing();
+    return;
+  }
+
+  if (carouselNavHintDismissedThisSession) return;
+
+  hint.hidden = false;
+  hint.setAttribute('aria-hidden', 'false');
+  hint.classList.add('carousel-nav-hint--visible');
+  window.removeEventListener('resize', positionCarouselNavHintOnResize);
+  window.addEventListener('resize', positionCarouselNavHintOnResize);
+  requestAnimationFrame(() => {
+    positionCarouselNavHint();
+    requestAnimationFrame(() => positionCarouselNavHint());
+  });
+}
+
+function dismissCarouselNavHint() {
+  carouselNavHintDismissedThisSession = true;
+  const hint = document.getElementById('carousel-nav-hint');
+  if (!hint || !hint.classList.contains('carousel-nav-hint--visible')) return;
+  hint.hidden = true;
+  hint.setAttribute('aria-hidden', 'true');
+  hint.classList.remove('carousel-nav-hint--visible');
+  window.removeEventListener('resize', positionCarouselNavHintOnResize);
+}
+
 function showPanel(panelId) {
   // Close any open color picker popup
   const colorPopup = document.getElementById('color-picker-popup');
@@ -877,6 +946,8 @@ function showPanel(panelId) {
     
     // Swap badge images to reflect active state
     updateBadgeImages();
+
+    maybeShowCarouselNavHint(panelId);
   }
 }
 
@@ -897,6 +968,8 @@ function hidePanel() {
   // Close the dialog container
   customizerDialog.classList.remove('open');
   activePanel = null;
+
+  hideCarouselNavHintWithoutDismissing();
   
   // Reset all badge images to default
   updateBadgeImages();
@@ -929,6 +1002,7 @@ let currentBodyIndex = bodyOrder.indexOf('darkling');
 
 // Carousel navigation functions
 function navigateHead(direction) {
+  dismissCarouselNavHint();
   if (direction === 'next') {
     currentHeadIndex = (currentHeadIndex + 1) % headOrder.length;
   } else {
@@ -943,6 +1017,7 @@ function navigateHead(direction) {
 }
 
 function navigateBody(direction) {
+  dismissCarouselNavHint();
   if (direction === 'next') {
     currentBodyIndex = (currentBodyIndex + 1) % bodyOrder.length;
   } else {
@@ -1208,6 +1283,7 @@ function applyPattern(patternName) {
 
 // Pattern carousel navigation
 function navigatePattern(direction) {
+  dismissCarouselNavHint();
   if (direction === 'next') {
     currentPatternIndex = (currentPatternIndex + 1) % patternOrder.length;
   } else {
