@@ -1520,6 +1520,33 @@ right: -5px;
 
 /* ========== Mobile-only (max-width 768px; desktop rules above are unchanged) ========== */
 @media (max-width: 768px) {
+  /* --- Shell: dynamic viewport + bottom inset (mobile URL / toolbars overlap fixed UI) --- */
+  html,
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  #app {
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.onboarding-body {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  #env-app {
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
   /* --- Onboarding: readable line lengths; primary CTA stays at bottom of the viewport --- */
   body.onboarding-body .title-content {
     gap: 28px;
@@ -1605,7 +1632,7 @@ right: -5px;
     border-radius: 0;
     border-left: none;
     border-right: none;
-    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0));
+    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0px) + 20px);
     background: #0a0a0a;
     border-top: 1px solid #4a4a4a;
     flex-shrink: 0;
@@ -1618,7 +1645,7 @@ right: -5px;
     justify-content: center;
     position: absolute;
     left: max(12px, env(safe-area-inset-left, 0px));
-    top: max(12px, env(safe-area-inset-top, 0px));
+    top: max(12px, calc(12px + env(safe-area-inset-top, 0px)));
     z-index: 25;
     width: 48px;
     height: 48px;
@@ -1683,6 +1710,11 @@ right: -5px;
   #app.mobile-panel-active #rotate-hint,
   #app.app--mobile-customizer-open #rotate-hint {
     display: none !important;
+  }
+
+  #rotate-hint {
+    top: max(12px, calc(12px + env(safe-area-inset-top, 0px)));
+    right: max(12px, calc(12px + env(safe-area-inset-right, 0px)));
   }
 
   #customizer-dialog .panel-header {
@@ -1761,7 +1793,7 @@ right: -5px;
   .carousel-footer-bar {
     padding-right: 16px;
     padding-left: 16px;
-    padding-bottom: 16px;
+    padding-bottom: max(20px, calc(12px + env(safe-area-inset-bottom, 0px)));
     justify-content: space-between;
     gap: 16px;
   }
@@ -1869,7 +1901,6 @@ right: -5px;
     align-items: center;
     gap: 12px 16px;
     padding: 12px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
   }
 
   #release-beetle-btn {
@@ -1977,10 +2008,15 @@ right: -5px;
     padding: 14px 24px;
   }
 
+  #release-confirm-backdrop .release-confirm-content {
+    padding-bottom: max(28px, calc(20px + env(safe-area-inset-bottom, 0px)));
+  }
+
   /* Environment page: keep “Create a new beetle” on one line; wrapper shrink-wraps for correct centering */
   #env-create-btn-wrapper {
     width: fit-content;
     max-width: calc(100vw - 32px);
+    bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
   }
 
   #env-create-btn {
