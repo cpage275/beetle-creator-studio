@@ -1,6 +1,6 @@
 
 
-Research:
+<b>Research:</b>
 
 Computer games for learning: an evidence-based approach by Richard Mayer 
 
@@ -14,7 +14,8 @@ Dinosaur in a Haystack: Reflections in Natural History by Stephen Jay Gould
 Wikipedia 
 
 
-3D models:
+
+<b>3D models:</b>
 
 printable_models on Free3D.com: https://free3d.com/user/printable_models
 
