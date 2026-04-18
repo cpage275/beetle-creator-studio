@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Beetle Creator Studio</title>
   <link rel="stylesheet" href="./src/style.css" />
 </head>
@@ -43,8 +44,9 @@
         <div class="panel" id="body-panel">
           <div class="panel-header">
             <h3>Body shape</h3>
-            <button class="close-btn" aria-label="Close">
-              <img src="./icons/Close-icon.svg" alt="Close" />
+            <button type="button" class="close-btn" aria-label="Apply changes">
+              <span class="close-btn-apply-label">Apply</span>
+              <img class="close-btn-icon" src="./icons/Close-icon.svg" alt="" />
             </button>
           </div>
           <div class="panel-divider"></div>
@@ -98,8 +100,9 @@
         <div class="panel" id="head-shape-panel">
           <div class="panel-header">
             <h3>Head shape</h3>
-            <button class="close-btn" aria-label="Close">
-              <img src="./icons/Close-icon.svg" alt="Close" />
+            <button type="button" class="close-btn" aria-label="Apply changes">
+              <span class="close-btn-apply-label">Apply</span>
+              <img class="close-btn-icon" src="./icons/Close-icon.svg" alt="" />
             </button>
           </div>
           <div class="panel-divider"></div>
@@ -153,8 +156,9 @@
         <div class="panel" id="pattern-panel">
           <div class="panel-header">
             <h3>Pattern</h3>
-            <button class="close-btn" aria-label="Close">
-              <img src="./icons/Close-icon.svg" alt="Close" />
+            <button type="button" class="close-btn" aria-label="Apply changes">
+              <span class="close-btn-apply-label">Apply</span>
+              <img class="close-btn-icon" src="./icons/Close-icon.svg" alt="" />
             </button>
           </div>
           <div class="panel-divider"></div>
@@ -208,8 +212,9 @@
         <div class="panel" id="color-panel">
           <div class="panel-header">
             <h3>Color</h3>
-            <button class="close-btn" aria-label="Close">
-              <img src="./icons/Close-icon.svg" alt="Close" />
+            <button type="button" class="close-btn" aria-label="Apply changes">
+              <span class="close-btn-apply-label">Apply</span>
+              <img class="close-btn-icon" src="./icons/Close-icon.svg" alt="" />
             </button>
           </div>
           <div class="panel-divider"></div>
@@ -264,8 +269,9 @@
         <div class="panel" id="surface-panel">
           <div class="panel-header">
             <h3>Surface</h3>
-            <button class="close-btn" aria-label="Close">
-              <img src="/icons/Close-icon.svg" alt="Close" />
+            <button type="button" class="close-btn" aria-label="Apply changes">
+              <span class="close-btn-apply-label">Apply</span>
+              <img class="close-btn-icon" src="/icons/Close-icon.svg" alt="" />
             </button>
           </div>
           <div class="panel-divider"></div>
@@ -318,6 +324,16 @@
 
       <!-- Three.js canvas container -->
       <div id="canvas-container">
+        <button
+          type="button"
+          id="mobile-editor-toggle"
+          class="mobile-editor-toggle"
+          aria-expanded="false"
+          aria-controls="buttons-column"
+          aria-label="Open customization tools"
+        >
+          <img class="mobile-editor-toggle-icon" src="./icons/Close-icon.svg" alt="" width="22" height="18" />
+        </button>
         <canvas id="canvas"></canvas>
         <div id="carousel-nav-hint" class="carousel-nav-hint" hidden aria-hidden="true">
           <div class="carousel-nav-hint-inner">
@@ -336,11 +352,11 @@
       </div>
       <button id="release-beetle-btn" type="button">Release beetle</button>
     </div>
-  </div>
 
-  <!-- Rotate hint icon (top-right) -->
-  <div id="rotate-hint">
-    <img src="./icons/3d_rotation.svg" alt="3D rotation hint" />
+    <!-- Rotate hint (inside #app so mobile “editing” selectors can target it) -->
+    <div id="rotate-hint">
+      <img src="./icons/3d_rotation.svg" alt="3D rotation hint" />
+    </div>
   </div>
 
   <!-- Release confirmation modal -->

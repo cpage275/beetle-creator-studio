@@ -656,6 +656,10 @@ right: -5px;
   display: block;
 }
 
+.close-btn-apply-label {
+  display: none;
+}
+
 .panel-divider {
   height: var(--dot);
   background: var(--dot-bg);
@@ -1507,4 +1511,481 @@ right: -5px;
 
 #env-create-btn:hover {
   background: #e8e8e8;
+}
+
+/* FAB: desktop never shows (mobile rules below) */
+.mobile-editor-toggle {
+  display: none;
+}
+
+/* ========== Mobile-only (max-width 768px; desktop rules above are unchanged) ========== */
+@media (max-width: 768px) {
+  /* --- Onboarding: readable line lengths; primary CTA stays at bottom of the viewport --- */
+  body.onboarding-body .title-content {
+    gap: 28px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  body.onboarding-body .title-img {
+    max-width: min(92vw, 420px);
+  }
+
+  body.onboarding-body .title-cta {
+    font-size: 16px;
+    line-height: 1.45;
+    max-width: 17rem;
+    text-align: center;
+  }
+
+  #onboarding-quote .quote-content {
+    padding: 0 22px;
+    max-width: 100%;
+  }
+
+  #onboarding-quote .quote-text {
+    font-size: 17px;
+    line-height: 1.55;
+    text-wrap: balance;
+  }
+
+  #onboarding-quote .quote-line-break {
+    display: none;
+  }
+
+  #onboarding-quote .quote-attribution {
+    font-size: 15px;
+  }
+
+  #onboarding-info .info-wrapper {
+    padding: 0;
+    gap: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  #onboarding-info .info-frame {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  #onboarding-info .info-frame-content {
+    padding: 28px 20px 24px;
+    gap: 28px;
+  }
+
+  #onboarding-info .letter-header {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  #onboarding-info .letter-header-right {
+    text-align: left;
+    width: 100%;
+  }
+
+  #onboarding-info .letter-chart-wrapper {
+    height: 300px;
+  }
+
+  #onboarding-info .letter-chart-wrapper .chart-title {
+    padding: 24px 12px 0;
+  }
+
+  #onboarding-info .create-beetle-btn {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0));
+    background: #0a0a0a;
+    border-top: 1px solid #4a4a4a;
+    flex-shrink: 0;
+  }
+
+  /* --- Creator: FAB opens badge rail; full canvas until then --- */
+  .mobile-editor-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: max(12px, env(safe-area-inset-left, 0px));
+    top: max(12px, env(safe-area-inset-top, 0px));
+    z-index: 25;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid #c2c2c2;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .mobile-editor-toggle:hover {
+    background: #f5f5f5;
+    border-color: #999;
+  }
+
+  .mobile-editor-toggle-icon {
+    display: block;
+    transform: scaleX(-1);
+  }
+
+  #app:not(.app--mobile-customizer-open) #buttons-column {
+    width: 0 !important;
+    min-width: 0;
+    overflow: hidden;
+    border-right: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #app.app--mobile-customizer-open #buttons-column {
+    width: 88px;
+    opacity: 1;
+    pointer-events: auto;
+    border-right: 1px solid #d1d1d1;
+  }
+
+  #app.app--mobile-customizer-open .badge-btn {
+    width: 88px;
+    height: 88px;
+  }
+
+  /* Full-width panel when badge rail is closed; share width when open */
+  #app:not(.app--mobile-customizer-open) #customizer-dialog.open {
+    width: 100vw !important;
+    max-width: none;
+  }
+
+  #app.app--mobile-customizer-open #customizer-dialog.open {
+    width: calc(100vw - 88px) !important;
+    max-width: none;
+  }
+
+  /* Bottom row hidden while badge rail is open or any panel is open */
+  #app.app--mobile-customizer-open #bottom-row,
+  #app.mobile-panel-active #bottom-row {
+    display: none !important;
+  }
+
+  /* Hide 3D hint while mobile editing UI is active (panel open and/or customizer rail open) */
+  #app.mobile-panel-active #rotate-hint,
+  #app.app--mobile-customizer-open #rotate-hint {
+    display: none !important;
+  }
+
+  #customizer-dialog .panel-header {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  #customizer-dialog .panel-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Trait preview card: centered column (image → title → adaptation chip) */
+  #customizer-dialog .carousel-card {
+    text-align: center;
+    padding: 16px;
+  }
+
+  #customizer-dialog .carousel-item-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #customizer-dialog .carousel-image-placeholder {
+    margin: 0 auto;
+  }
+
+  #customizer-dialog .carousel-title-container {
+    width: 100%;
+    align-items: center;
+  }
+
+  /* Match bottom-row adaptation chip sizing (see #niche-chips-container .niche-chip) */
+  #customizer-dialog .carousel-niche-chip {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .close-btn-apply-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ubuntu Sans Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 100px;
+    background: #131313;
+    border: 1px solid #131313;
+    line-height: 1.2;
+  }
+
+  .close-btn .close-btn-icon {
+    display: none;
+  }
+
+  .close-btn {
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .carousel-footer-shape {
+    width: 100%;
+    max-width: 100%;
+    margin-right: 0;
+    margin-bottom: -12px;
+  }
+
+  .carousel-footer-bar {
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .carousel-prev,
+  .carousel-next {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  .carousel-prev img,
+  .carousel-next img {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Real beetle block: header → gray rule → name → description (one box); photo below */
+  #customizer-dialog .real-example-box {
+    background: #ffffff;
+    border: 1px solid #c2c2c2;
+    border-radius: 4px;
+    padding: 20px 16px;
+  }
+
+  #customizer-dialog .real-example-header-img {
+    display: none !important;
+  }
+
+  #customizer-dialog .real-example-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-top: 0;
+  }
+
+  #customizer-dialog .real-example-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+  }
+
+  #customizer-dialog .real-example-header-label {
+    order: 1;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  #customizer-dialog .real-example-divider {
+    display: block;
+    order: 2;
+    width: 100%;
+    max-width: 220px;
+    height: 1px;
+    margin: 0 auto;
+    background: #c2c2c2;
+    background-size: unset;
+  }
+
+  #customizer-dialog .real-example-name {
+    order: 3;
+    text-align: left;
+  }
+
+  #customizer-dialog .real-example-description {
+    order: 4;
+    text-align: left;
+    border: none;
+    border-radius: 0;
+    padding: 0 0px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 100%;
+  }
+
+  #customizer-dialog .real-example-image-container {
+    order: 5;
+    width: 100%;
+    max-width: 220px;
+    margin: 4px auto 0;
+    padding-top: 0;
+  }
+
+  #customizer-dialog .real-example-arrow {
+    display: none !important;
+  }
+
+  .panel-connector {
+    width: 100%;
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* --- Release above label + chips row; solid button (no SVG artwork from JS) --- */
+  #bottom-row {
+    --release-button-width: 0px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 12px 16px;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+  }
+
+  #release-beetle-btn {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: 38px;
+    right: auto;
+    top: auto;
+    padding: 14px 20px;
+    margin: 0;
+    background-color: #131313 !important;
+    background-image: none !important;
+    color: #ffffff;
+    border: 1px solid #131313;
+    border-radius: 100px;
+    font-size: 16px;
+  }
+
+  #release-beetle-btn:disabled {
+    color: #9a9a9a;
+  }
+
+  #bottom-row .bottom-row-label {
+    grid-column: 1;
+    grid-row: 2;
+    margin-right: 0;
+  }
+
+  #niche-chips-container {
+    grid-column: 2;
+    grid-row: 2;
+    padding-right: 0;
+    width: auto;
+    min-width: 0;
+    gap: 10px;
+  }
+
+  #niche-chips-container .niche-chip {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  /* Color + Surface panels: 16px feature box padding, vertical stacks */
+  #color-panel .feature-box,
+  #surface-panel .feature-box {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  #color-panel .color-pickers-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  #color-panel .color-picker-group {
+    width: 100%;
+    flex: none;
+  }
+
+  #color-panel .color-preset-row {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  #color-panel .feature-box .carousel-niche-chip {
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #surface-panel .surface-niche-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  #surface-panel .surface-niche-text {
+    text-align: center;
+  }
+
+  /* Color preset popup under feature box on mobile (position from JS) */
+  #color-panel .color-picker-popup.visible {
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+  }
+
+  /* Release confirmation: stack Cancel / Yes vertically */
+  #release-confirm-backdrop .release-confirm-actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  #release-confirm-backdrop .release-confirm-actions .btn-cancel,
+  #release-confirm-backdrop .release-confirm-actions .btn-release {
+    flex: none;
+    width: 100%;
+    height: auto;
+    min-height: 52px;
+    padding: 14px 24px;
+  }
+
+  /* Environment page: keep “Create a new beetle” on one line; wrapper shrink-wraps for correct centering */
+  #env-create-btn-wrapper {
+    width: fit-content;
+    max-width: calc(100vw - 32px);
+  }
+
+  #env-create-btn {
+    white-space: nowrap;
+    padding: 14px 40px;
+    box-sizing: border-box;
+  }
 }

@@ -759,7 +759,16 @@ async function runReleaseSequence() {
 
 function initReleaseButton() {
   if (!releaseButtonEl) return;
-  releaseButtonEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}images/release-button.svg')`;
+  const releaseDesktopMedia = window.matchMedia('(min-width: 769px)');
+  function syncReleaseButtonBackground() {
+    if (releaseDesktopMedia.matches) {
+      releaseButtonEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}images/release-button.svg')`;
+    } else {
+      releaseButtonEl.style.backgroundImage = '';
+    }
+  }
+  syncReleaseButtonBackground();
+  releaseDesktopMedia.addEventListener('change', syncReleaseButtonBackground);
   // Hook up confirmation modal instead of immediate release
   const backdrop = document.getElementById('release-confirm-backdrop');
   const cancelBtn = document.getElementById('release-cancel-btn');
@@ -843,6 +852,53 @@ function initReleaseButton() {
 // Panel management
 let activePanel = null;
 const customizerDialog = customizerDialogEl;
+
+const MOBILE_UI_MQ = window.matchMedia('(max-width: 768px)');
+
+function isMobileUi() {
+  return MOBILE_UI_MQ.matches;
+}
+
+function syncMobileLayoutClasses() {
+  const app = document.getElementById('app');
+  if (!app) return;
+  if (!isMobileUi()) {
+    app.classList.remove('app--mobile-customizer-open', 'mobile-panel-active');
+  }
+}
+
+function syncMobileEditorToggleAria() {
+  const btn = document.getElementById('mobile-editor-toggle');
+  const app = document.getElementById('app');
+  if (!btn || !app) return;
+  btn.setAttribute('aria-expanded', app.classList.contains('app--mobile-customizer-open') ? 'true' : 'false');
+}
+
+function initMobileEditorToggle() {
+  const app = document.getElementById('app');
+  const btn = document.getElementById('mobile-editor-toggle');
+  if (!btn || !app) return;
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!isMobileUi()) return;
+    const open = app.classList.contains('app--mobile-customizer-open');
+    if (open) {
+      if (activePanel) hidePanel();
+      app.classList.remove('app--mobile-customizer-open');
+    } else {
+      app.classList.add('app--mobile-customizer-open');
+      showPanel('head-shape');
+    }
+    syncMobileEditorToggleAria();
+  });
+
+  MOBILE_UI_MQ.addEventListener('change', () => {
+    syncMobileLayoutClasses();
+    syncMobileEditorToggleAria();
+  });
+  syncMobileEditorToggleAria();
+}
 
 const CAROUSEL_HINT_PANEL_IDS = new Set(['head-shape', 'body', 'pattern']);
 /** Pixels to shift the hint upward from the carousel footer bar center */
@@ -948,6 +1004,10 @@ function showPanel(panelId) {
     updateBadgeImages();
 
     maybeShowCarouselNavHint(panelId);
+
+    if (isMobileUi()) {
+      document.getElementById('app')?.classList.add('mobile-panel-active');
+    }
   }
 }
 
@@ -970,7 +1030,13 @@ function hidePanel() {
   activePanel = null;
 
   hideCarouselNavHintWithoutDismissing();
-  
+
+  if (isMobileUi()) {
+    const app = document.getElementById('app');
+    app?.classList.remove('mobile-panel-active', 'app--mobile-customizer-open');
+    syncMobileEditorToggleAria();
+  }
+
   // Reset all badge images to default
   updateBadgeImages();
 }
@@ -1256,6 +1322,15 @@ if (document.readyState === 'loading') {
     initColorPanel();
     initSurfacePanel();
     initReleaseButton();
+    initMobileEditorToggle();
+    const chips = document.getElementById('niche-chips-container');
+    if (chips) {
+      chips.addEventListener('wheel', (e) => {
+        if (e.deltaY === 0) return;
+        e.preventDefault();
+        chips.scrollLeft += e.deltaY;
+      }, { passive: false });
+    }
   });
 } else {
   setBadgeImages();
@@ -1263,6 +1338,7 @@ if (document.readyState === 'loading') {
   initColorPanel();
   initSurfacePanel();
   initReleaseButton();
+  initMobileEditorToggle();
   // Enable vertical wheel → horizontal scroll on adaptations row
   const chips = document.getElementById('niche-chips-container');
   if (chips) {
@@ -1328,6 +1404,40 @@ function updatePatternCarouselUI() {
   updateNicheChips();
 }
 
+/** Position color preset popup: desktop = beside swatch; mobile = fixed below color feature box */
+function positionColorPickerPopup(swatch) {
+  const popup = document.getElementById('color-picker-popup');
+  if (!popup || !swatch) return;
+  const swatchRect = swatch.getBoundingClientRect();
+  if (MOBILE_UI_MQ.matches) {
+    const featureBox = document.querySelector('#color-panel .feature-box');
+    if (featureBox) {
+      const fb = featureBox.getBoundingClientRect();
+      const pad = 12;
+      const w = Math.min(fb.width, window.innerWidth - pad * 2);
+      const left = Math.max(pad, fb.left + (fb.width - w) / 2);
+      popup.style.top = `${fb.bottom + 8}px`;
+      popup.style.left = `${left}px`;
+      popup.style.width = `${w}px`;
+      const spaceBelow = window.innerHeight - fb.bottom - 16;
+      popup.style.maxHeight = `${Math.max(120, Math.min(spaceBelow, window.innerHeight * 0.45))}px`;
+      popup.style.overflowY = 'auto';
+    } else {
+      popup.style.top = `${swatchRect.bottom + 8}px`;
+      popup.style.left = '12px';
+      popup.style.width = `${Math.min(swatchRect.width + 48, window.innerWidth - 24)}px`;
+      popup.style.maxHeight = '40vh';
+      popup.style.overflowY = 'auto';
+    }
+  } else {
+    popup.style.top = `${swatchRect.top}px`;
+    popup.style.left = `${swatchRect.right + 8}px`;
+    popup.style.width = 'auto';
+    popup.style.maxHeight = '';
+    popup.style.overflowY = '';
+  }
+}
+
 // Color panel initialization
 function initColorPanel() {
   // Populate bright/dull color presets in the popup
@@ -1376,13 +1486,9 @@ function initColorPanel() {
         activeSwatchTarget = null;
       } else {
         activeSwatchTarget = target;
-        
-        // Position popup as floating overlay to the right of the clicked swatch
-        const swatchRect = swatch.getBoundingClientRect();
-        popup.style.top = swatchRect.top + 'px';
-        popup.style.left = (swatchRect.right + 8) + 'px';
-        popup.style.width = 'auto';
-        
+
+        positionColorPickerPopup(swatch);
+
         popup.classList.add('visible');
         document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
         swatch.classList.add('active');
@@ -1429,7 +1535,13 @@ function initColorPanel() {
       activeSwatchTarget = null;
     }
   });
-  
+
+  window.addEventListener('resize', () => {
+    if (!popup?.classList.contains('visible')) return;
+    const swatch = document.querySelector('.color-swatch.active');
+    if (swatch) positionColorPickerPopup(swatch);
+  });
+
   // Initialize UI
   updateColorSwatchVisibility();
   updateColorUI();
