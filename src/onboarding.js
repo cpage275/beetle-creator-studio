@@ -12,6 +12,8 @@ function drawChart() {
   const wrapper = document.getElementById('onboarding-chart');
   if (!wrapper || typeof d3 === 'undefined') return;
 
+  wrapper.querySelectorAll('svg').forEach((el) => el.remove());
+
   const dataset = [22, 18, 13, 12, 9, 8, 7, 6, 4, 1];
   const colors = ['#00FFFF', '#11FF4B', '#2BA0FF', '#CFF831', '#FF721A', '#F83BFB', '#4242FF', '#27FFA1', '#FFC812', '#9E30FF'];
     const labels = [
@@ -21,19 +23,26 @@ function drawChart() {
   const alwaysVisibleIndex = 0;
 
   const width = wrapper.offsetWidth;
-  const height = wrapper.offsetHeight;
-  const minOfWH = Math.min(width, height) / 2;
+  const fullHeight = wrapper.offsetHeight;
+  const titleEl = wrapper.querySelector('.chart-title');
+  const titleBlock = titleEl ? titleEl.offsetHeight + 8 : 0;
+  const chartAreaH = Math.max(80, fullHeight - titleBlock);
+  const cx = width / 2;
+  const cy = titleBlock + chartAreaH / 2;
 
+  const minHalf = Math.min(width / 2, chartAreaH / 2);
+  const labelMargin = width < 420 ? 28 : 36;
   const animDelay = 40;
   const animDur = 500;
   const hoverDur = 200;
 
-  let radius = minOfWH > 155 ? 155 : minOfWH;
+  let radius = Math.min(minHalf > 155 ? 155 : minHalf, minHalf - labelMargin, chartAreaH * 0.38);
+  radius = Math.max(48, radius);
 
   let svg = d3.select('#onboarding-chart').append('svg')
-    .attr({ 'width': width, 'height': height, 'class': 'pieChart' })
+    .attr({ 'width': width, 'height': fullHeight, 'class': 'pieChart' })
     .append('g')
-    .attr({ 'transform': 'translate(' + width / 2 + ',' + height / 2 + ')' });
+    .attr({ 'transform': 'translate(' + cx + ',' + cy + ')' });
 
   let arc = d3.svg.arc()
     .outerRadius(radius * 0.6)

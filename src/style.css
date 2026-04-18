@@ -1532,7 +1532,6 @@ right: -5px;
     height: 100vh;
     height: 100dvh;
     max-height: 100dvh;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   }
 
   body.onboarding-body {
@@ -1540,11 +1539,15 @@ right: -5px;
     min-height: 100dvh;
   }
 
+  /* Environment: match canvas so no light strip under the fold */
+  body.env-body {
+    background: #000000;
+  }
+
   #env-app {
     box-sizing: border-box;
     min-height: 100vh;
     min-height: 100dvh;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   }
 
   /* --- Onboarding: readable line lengths; primary CTA stays at bottom of the viewport --- */
@@ -1615,11 +1618,17 @@ right: -5px;
   }
 
   #onboarding-info .letter-chart-wrapper {
-    height: 300px;
+    height: clamp(220px, 52vw, 320px);
+    min-height: 200px;
   }
 
   #onboarding-info .letter-chart-wrapper .chart-title {
-    padding: 24px 12px 0;
+    padding: 12px 10px 0;
+    font-size: 14px;
+  }
+
+  #onboarding-info .letter-chart-wrapper text {
+    font-size: 11px;
   }
 
   #onboarding-info .create-beetle-btn {
@@ -1793,7 +1802,7 @@ right: -5px;
   .carousel-footer-bar {
     padding-right: 16px;
     padding-left: 16px;
-    padding-bottom: max(20px, calc(12px + env(safe-area-inset-bottom, 0px)));
+    padding-bottom: max(20px, calc(0px + env(safe-area-inset-bottom, 0px)));
     justify-content: space-between;
     gap: 16px;
   }
@@ -1901,6 +1910,8 @@ right: -5px;
     align-items: center;
     gap: 12px 16px;
     padding: 12px;
+    /* Inset lives inside the white bar (no gap / wrong color below it) */
+    padding-bottom: calc(12px + 20px + env(safe-area-inset-bottom, 0px));
   }
 
   #release-beetle-btn {
