@@ -256,10 +256,19 @@ body.onboarding-body.page-exit {
 .letter-chart-wrapper {
   width: 100%;
   height: 450px;
+  display: flex;
+  flex-direction: column;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
   background-color: #0d0d0d;
+}
+
+.letter-chart-canvas {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  width: 100%;
 }
 
 .letter-chart-wrapper path {
@@ -284,7 +293,8 @@ body.onboarding-body.page-exit {
   color: white;
   text-align: center;
   margin: 0;
-  padding: 40px 0 0;
+  padding: 24px 16px 12px;
+  flex-shrink: 0;
   position: relative;
   z-index: 1;
 }
@@ -1618,17 +1628,27 @@ right: -5px;
   }
 
   #onboarding-info .letter-chart-wrapper {
-    height: clamp(220px, 52vw, 320px);
-    min-height: 200px;
+    height: max(280px, min(360px, 42dvh));
+    min-height: 280px;
+    flex-shrink: 0;
+  }
+
+  #onboarding-info .letter-chart-canvas {
+    min-height: 120px;
   }
 
   #onboarding-info .letter-chart-wrapper .chart-title {
-    padding: 12px 10px 0;
+    padding: 18px 12px 10px;
     font-size: 14px;
   }
 
+  #onboarding-info .letter-chart-wrapper path {
+    stroke-width: 2px;
+  }
+
   #onboarding-info .letter-chart-wrapper text {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 0.2px;
   }
 
   #onboarding-info .create-beetle-btn {

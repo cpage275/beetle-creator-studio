@@ -9,10 +9,10 @@ import nichesUrl from './assets/niches-diagram.png?url';
 
 // ── D3 Pie Chart ──
 function drawChart() {
-  const wrapper = document.getElementById('onboarding-chart');
-  if (!wrapper || typeof d3 === 'undefined') return;
+  const mount = document.getElementById('onboarding-chart-canvas');
+  if (!mount || typeof d3 === 'undefined') return;
 
-  wrapper.querySelectorAll('svg').forEach((el) => el.remove());
+  mount.querySelectorAll('svg').forEach((el) => el.remove());
 
   const dataset = [22, 18, 13, 12, 9, 8, 7, 6, 4, 1];
   const colors = ['#00FFFF', '#11FF4B', '#2BA0FF', '#CFF831', '#FF721A', '#F83BFB', '#4242FF', '#27FFA1', '#FFC812', '#9E30FF'];
@@ -22,24 +22,28 @@ function drawChart() {
   ];
   const alwaysVisibleIndex = 0;
 
-  const width = wrapper.offsetWidth;
-  const fullHeight = wrapper.offsetHeight;
-  const titleEl = wrapper.querySelector('.chart-title');
-  const titleBlock = titleEl ? titleEl.offsetHeight + 8 : 0;
-  const chartAreaH = Math.max(80, fullHeight - titleBlock);
+  const width = mount.offsetWidth;
+  const fullHeight = mount.offsetHeight;
+  if (width < 2 || fullHeight < 2) return;
+
+  const chartAreaH = fullHeight;
   const cx = width / 2;
-  const cy = titleBlock + chartAreaH / 2;
+  const cy = fullHeight / 2;
 
   const minHalf = Math.min(width / 2, chartAreaH / 2);
-  const labelMargin = width < 420 ? 28 : 36;
+  const compact = width < 520 || fullHeight < 200;
+  const labelMargin = compact
+    ? Math.min(52, Math.max(26, Math.round(width * 0.1)))
+    : (width < 420 ? 28 : 36);
+  const heightRadiusCap = chartAreaH * (compact ? 0.28 : 0.38);
   const animDelay = 40;
   const animDur = 500;
   const hoverDur = 200;
 
-  let radius = Math.min(minHalf > 155 ? 155 : minHalf, minHalf - labelMargin, chartAreaH * 0.38);
-  radius = Math.max(48, radius);
+  let radius = Math.min(minHalf > 155 ? 155 : minHalf, minHalf - labelMargin, heightRadiusCap);
+  radius = Math.max(compact ? 34 : 48, radius);
 
-  let svg = d3.select('#onboarding-chart').append('svg')
+  let svg = d3.select('#onboarding-chart-canvas').append('svg')
     .attr({ 'width': width, 'height': fullHeight, 'class': 'pieChart' })
     .append('g')
     .attr({ 'transform': 'translate(' + cx + ',' + cy + ')' });
@@ -164,6 +168,29 @@ function drawChart() {
     });
 }
 
+let chartResizeObserver = null;
+let chartResizeDebounce = null;
+
+function scheduleChartDraw() {
+  requestAnimationFrame(function () {
+    requestAnimationFrame(drawChart);
+  });
+}
+
+function attachChartResizeObserver() {
+  const chartRoot = document.getElementById('onboarding-chart');
+  if (!chartRoot || typeof ResizeObserver === 'undefined') return;
+  if (chartResizeObserver) {
+    chartResizeObserver.disconnect();
+    chartResizeObserver = null;
+  }
+  chartResizeObserver = new ResizeObserver(function () {
+    clearTimeout(chartResizeDebounce);
+    chartResizeDebounce = setTimeout(drawChart, 80);
+  });
+  chartResizeObserver.observe(chartRoot);
+}
+
 // ── Onboarding Init ──
 function initOnboarding() {
   // Set background image on all screens
@@ -213,8 +240,8 @@ function initOnboarding() {
           quoteScreen.classList.remove('active');
           quoteScreen.classList.remove('fade-out');
           infoScreen.classList.add('active');
-          // Draw chart once the info screen is visible
-          setTimeout(drawChart, 100);
+          attachChartResizeObserver();
+          setTimeout(scheduleChartDraw, 50);
         }, 1000);
       }, 5000);
     }, 800);
